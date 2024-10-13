@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        *{
+            font-family: monospace;
+            text-align: center;
+            border-radius: 10%/20%;
+        }
+        body{
+            background-color: blue;
+        }
+        .container{
+            background-color: rgb(71,59,59);
+            padding: 100px;
+            display: inline-block;
+            margin-top: 100px;
+        }
+        button{
+            font-weight: 900;
+            background-color: yellow;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><b><u>STOP WATCH</u></b></h1>
+        <h1 id="stop">00:00:00</h1>
+        <button onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+        <button onclick="resetStopwatch()">Reset</button>
+    </div>
+
+    <script>
+        // Declare variables to track the interval, start time, and elapsed time
+        let runningInterval = null, startTime = 0, elapsedTime = 0;
+        const element = document.getElementById("stop");  // Get the element that displays the stopwatch time
+
+        // Function to start the stopwatch
+        const startStopwatch = () => {
+            // Only start if the stopwatch is not already running
+            if (!runningInterval) {
+                // Calculate the start time (current time minus any previously elapsed time)
+                startTime = Date.now() - elapsedTime;
+
+                // Set up an interval to update the display every 10 milliseconds (for precision)
+                runningInterval = setInterval(() => {
+                    // Calculate the elapsed time and update the display
+                    displayTime(elapsedTime = Date.now() - startTime);
+                }, 10);
+            }
+        };
+
+        // Function to stop the stopwatch
+        const stopStopwatch = () => {
+            clearInterval(runningInterval);  // Stop the interval
+            runningInterval = null;  // Reset the interval tracker
+        };
+
+        // Function to reset the stopwatch
+        const resetStopwatch = () => {
+            stopStopwatch();  // Stop the stopwatch
+            elapsedTime = 0;  // Reset elapsed time to 0
+            displayTime(elapsedTime);  // Update the display to show 00:00:00
+        };
+
+        // Function to display the time in a formatted way (MM:SS:MS)
+        const displayTime = (time) => {
+            // Function to pad single-digit numbers with a leading zero
+            const pad = (n) => (n < 10 ? "0" : "") + n;
+
+            // Calculate minutes, seconds, and milliseconds, and update the display
+            element.innerText = `
+                ${pad(Math.floor(time / 60000))}:${
+                pad(Math.floor((time / 1000) % 60))}:${
+                pad(Math.floor((time % 1000) / 10))}`;  // Display time in MM:SS:MS format
+        };
+    </script>
+</body>
+</html>
